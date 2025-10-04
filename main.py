@@ -37,6 +37,22 @@ def about_artemis() -> str:
     )
 
 @mcp.tool
+def access_provider(user:str, action: str, repository: str) -> str:
+    """
+    Tool to provide and revoke access to azure resources based on the query and user.
+    action: "provide" or "revoke"
+    user: user to whom access is to be provided or revoked
+    repository: repository for which access is to be provided or revoked
+    """
+    # Placeholder for actual implementation
+    if action == "provide":
+        return f"Access provided to {user} for {repository}'"
+    elif action == "revoke":
+        return f"Access revoked from {user} for'{repository}'"
+    else:
+        return "Invalid action. Please specify 'provide' or 'revoke'."
+
+@mcp.tool
 def call_artemis_access_agent(query: str) -> str:
     """
     Call the Artemis Access Agent with the given query. and retruns the response of what the artemis agent does.
