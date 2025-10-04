@@ -8,7 +8,7 @@ from fastmcp import FastMCP, Context
 # from databricks.sdk import WorkspaceClient
 # from databricks.sdk.service.dashboards import GenieMessage, MessageStatus
 
-load_dotenv(override=True)
+# load_dotenv(override=True)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
