@@ -36,6 +36,15 @@ def about_artemis() -> str:
         "It provides features for interacting with GitHub Actions, Azure resources, and compliance management. "
     )
 
+@mcp.tool
+def call_artemis_access_agent(query: str) -> str:
+    """
+    Call the Artemis Access Agent with the given query. and retruns the response of what the artemis agent does.
+    """
+    # Placeholder for actual implementation
+
+    return f"Access Agent Response to '{query}'"
+
 
 
 
