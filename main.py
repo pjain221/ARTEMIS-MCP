@@ -44,8 +44,9 @@ def access_provider(user:str, repository: str) -> str:
     user: user to whom access is to be provided or revoked
     repository: repository for which access is to be provided or revoked
     """
-    pat_token = "OkRyMlViR3VrcW9tbFpuQjh0cEJqV29lbm9jSDZGaGJ6cFlrZFpUTmJpRDJBVjVMN2JNVUFKUVE5OUJKQUNBQUFBQXVDbHpqQUFBU0FaRE9BWFBR"
-    pat_token = base64.b64encode(f":{pat_token}".encode()).decode()
+
+    pat_token_os = os.getenv('AZURE_DEVOPS_PAT')
+    pat_token = base64.b64encode(f":{pat_token_os}".encode()).decode()
     url = "https://vsaex.dev.azure.com/reply-hackathon/_apis/userentitlements?api-version=7.1"
     headers = {
         "Content-Type": "application/json",
