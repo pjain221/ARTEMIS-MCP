@@ -3,11 +3,12 @@ import asyncio
 import logging
 from typing import Optional
 from fastmcp import FastMCP, Context
+import requests
+import base64
 # from dotenv import load_dotenv
 # from fastmcp.server.auth.providers import azure, jwt
 # from databricks.sdk import WorkspaceClient
 # from databricks.sdk.service.dashboards import GenieMessage, MessageStatus
-
 # load_dotenv(override=True)
 
 # Configure logging
@@ -37,20 +38,52 @@ def about_artemis() -> str:
     )
 
 @mcp.tool
-def access_provider(user:str, action: str, repository: str) -> str:
+def access_provider(user:str, repository: str) -> str:
     """
     Tool to provide and revoke access to azure resources based on the query and user.
-    action: "provide" or "revoke"
     user: user to whom access is to be provided or revoked
     repository: repository for which access is to be provided or revoked
     """
-    # Placeholder for actual implementation
-    if action == "provide":
-        return f"Access provided to {user} for {repository}'"
-    elif action == "revoke":
-        return f"Access revoked from {user} for'{repository}'"
-    else:
-        return "Invalid action. Please specify 'provide' or 'revoke'."
+    pat_token = "OkRyMlViR3VrcW9tbFpuQjh0cEJqV29lbm9jSDZGaGJ6cFlrZFpUTmJpRDJBVjVMN2JNVUFKUVE5OUJKQUNBQUFBQXVDbHpqQUFBU0FaRE9BWFBR"
+    pat_token = base64.b64encode(f":{pat_token}".encode()).decode()
+    url = "https://vsaex.dev.azure.com/reply-hackathon/_apis/userentitlements?api-version=7.1"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Basic {pat_token}"
+    }
+    payload = {
+        "accessLevel": {
+            "licensingSource": "account",
+            "accountLicenseType": "express"
+        },
+        "extensions": [
+            {
+                "id": "ms.feed"
+            }
+        ],
+        "user": {
+            "principalName": "d.hoglund@reply.com",
+            "subjectKind": "user"
+        },
+        "projectEntitlements": [
+            {
+                "group": {
+                    "groupType": "projectContributor"
+                },
+                "projectRef": {
+                    "id": "27682584-7e8b-44d0-9670-297525085096"
+                }
+            }
+        ]
+    }
+    try:
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Error providing access: {e}")
+        return f"Error providing access: {e}"
+    return f"Access provided to {user} for repository {repository}"
+
 
 @mcp.tool
 def call_artemis_access_agent(query: str) -> str:
